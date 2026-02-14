@@ -1,8 +1,7 @@
 #!/bin/sh
 echo "Starting backend script..."
 echo "Current directory: $(pwd)"
-
-# Add fitness_app and current dir to PYTHONPATH to verify import resolution
+# Re-apply PYTHONPATH just in case, though relative imports should work now.
 export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/fitness_app
 echo "PYTHONPATH set to: $PYTHONPATH"
 

@@ -9,26 +9,26 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
-from auth import auth
-import crud, models, schemas
-from core.database import SessionLocal, engine
-from ai import ai_meal, ai_workout, ai_chat
+from .auth import auth
+from . import crud, models, schemas
+from .core.database import SessionLocal, engine
+from .ai import ai_meal, ai_workout, ai_chat
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-from auth.router import router as auth_router
-from core.database import get_db
+from .auth.router import router as auth_router
+from .core.database import get_db
 
 app = FastAPI(title="Fitness Tracker API")
 app.include_router(auth_router)
 
-from routers import admin, analytics, users
+from .routers import admin, analytics, users
 app.include_router(admin.router)
 app.include_router(analytics.router)
 app.include_router(users.router)
 
-from mind import router as mind_router
+from .mind import router as mind_router
 app.include_router(mind_router.router)
 
 # Compatibility redirect (optional, or just update frontend)
