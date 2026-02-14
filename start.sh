@@ -1,20 +1,20 @@
 #!/bin/sh
-# Debug info
-echo "Starting application with start.sh..."
+echo "Starting backend script..."
 echo "Current directory: $(pwd)"
 
-# Handle PORT variable (default to 8000)
-PORT="${PORT:-8000}"
+# Add fitness_app and current dir to PYTHONPATH to verify import resolution
+export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/fitness_app
+echo "PYTHONPATH set to: $PYTHONPATH"
 
-# Check if main.py is in the current directory (flattened) or in fitness_app
-if [ -f "main.py" ]; then
-    echo "Found main.py in root. Running directly."
-    exec uvicorn main:app --host 0.0.0.0 --port "$PORT"
-elif [ -d "fitness_app" ]; then
-    echo "Found fitness_app directory. Running as module."
-    exec uvicorn fitness_app.main:app --host 0.0.0.0 --port "$PORT"
+# Detect entry point
+if [ -f "fitness_app/main.py" ]; then
+    echo "Found fitness_app/main.py, running as module usage."
+    exec uvicorn fitness_app.main:app --host 0.0.0.0 --port "${PORT:-8000}"
+elif [ -f "main.py" ]; then
+    echo "Found main.py in root, running direct usage."
+    exec uvicorn main:app --host 0.0.0.0 --port "${PORT:-8000}"
 else
-    echo "Could not find main.py or fitness_app directory!"
-    ls -la
+    echo "ERROR: Could not find main.py"
+    ls -R
     exit 1
 fi
